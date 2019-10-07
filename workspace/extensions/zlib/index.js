@@ -8,24 +8,31 @@ var zlib = require('zlib');
 var ilx = new f5.ILXServer();
 
 ilx.addMethod('b64decode_and_inflate', function(req, res) {
-    var unzip = zlib.unzip(new Buffer(req.params()[0], 'base64')).toString();
-    res.reply(unzip);
+    try {
+        //try to unzip the payload
+        var inflate = zlib.inflate(new Buffer(req.params()[0], 'base64')).toString();
+    } catch (err) {
+        //gracefully handle our errors ane return resErr (1) because I was told do to that...
+        console.error('Error: ', err.message);
+        return res.reply(1);
+    }
+    //return 0 (success) and unzip'd content
+    res.reply([0, inflate]);
 });
 
 ilx.addMethod('b64decode_and_unzip', function(req, res) {
-    var unzip = zlib.unzip(new Buffer(req.params()[0], 'base64')).toString();
-    res.reply(unzip);
+    try {
+        //try to unzip the payload
+        var inflate = zlib.unzip(new Buffer(req.params()[0], 'base64')).toString();
+    } catch (err) {
+        //gracefully handle our errors ane return resErr (1) because I was told do to that...
+        console.error('Error: ', err.message);
+        return res.reply(1);
+    }
+    //return 0 (success) and unzip'd content
+    res.reply([0, unzip]);
 });
 
-ilx.addMethod('deflate_and_b64encode', function(req, res) {
-    var zip = zlib.deflate(new Buffer(req.params()[0])).toString('base64');
-    res.reply(zip);
-});
-
-ilx.addMethod('zip_and_b64encode', function(req, res) {
-    var zip = zlib.deflate(new Buffer(req.params()[0])).toString('base64');
-    res.reply(zip);
-});
 
 //listen for RPC calls from TCL iRules
 ilx.listen();
