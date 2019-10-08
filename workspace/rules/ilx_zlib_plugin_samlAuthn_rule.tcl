@@ -20,7 +20,7 @@ when HTTP_REQUEST {
             if { $payload_data contains "SAMLRequest" } {
                 # Extract SAML request data
                 set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
-                set SAMLdata [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]]
+                set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]] 1]
                 log local0. "DEBUG: SAMLdata: $SAMLdata"
                 set SAML_Issuer_loc [string first "saml:issuer" [string tolower $SAMLdata]]
                 set SAML_Issuer_start [expr {[string first ">" $SAMLdata $SAML_Issuer_loc] + 1}]
@@ -41,7 +41,7 @@ when HTTP_REQUEST_DATA {
     if { $payload_data contains "SAMLRequest" } {
         # Extract SAML request data
         set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
-        set SAMLdata [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]]
+        set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]] 1]
         log local0. "DEBUG: SAMLdata: $SAMLdata"
         set SAML_Issuer_loc [string first "saml:issuer" [string tolower $SAMLdata]]
         set SAML_Issuer_start [expr {[string first ">" $SAMLdata $SAML_Issuer_loc] + 1}]
