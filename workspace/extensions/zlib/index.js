@@ -11,7 +11,7 @@ var ilx = new f5.ILXServer();
 function isEncoded (url) {
     url = url || '';
     return url !== decodeURIComponent(url);
-  };
+  }
 
 //function to decode URI components
 function cleanURI (uri) {
@@ -19,7 +19,7 @@ function cleanURI (uri) {
       uri = decodeURIComponent(uri);
     }
     return uri;
-  };
+  }
 
 //function to inflate compressed content
 function inflateClean (samlResponse) {
@@ -29,7 +29,7 @@ function inflateClean (samlResponse) {
       var tmp = zlib.inflateRawSync(samlResponse).toString('utf8');
       return tmp;
     }
-  };
+  }
 
 //de-URL-encode, base64decode, inflate RAW SAML AuthN Request
 ilx.addMethod('decodeRAW', function(req, res) {
@@ -62,7 +62,7 @@ ilx.addMethod('b64decodeInflate', function(req, res) {
         return res.reply(0);
     }
     //return 1 (success) and unzip'd content
-    res.reply([1, unzip]);
+    res.reply([1, xml]);
 });
 
 
