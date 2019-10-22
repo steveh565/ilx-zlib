@@ -37,7 +37,7 @@ when HTTP_REQUEST {
 
 when HTTP_REQUEST_DATA {
     set payload_data [URI::decode [HTTP::payload]]
-    log local0. "payload=[URI::query "?$payload_data" "SAMLRequest"]" 
+    log local0. "DEBUG: payload=$payload_data" 
     if { $payload_data contains "SAMLRequest" } {
         # Extract SAML request data
         set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
