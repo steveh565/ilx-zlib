@@ -19,9 +19,17 @@ when HTTP_REQUEST {
             log local0. "DEBUG: SAMLRequest Parameter: [URI::query "?$payload_data" "SAMLRequest"]"
             if { $payload_data contains "SAMLRequest" } {
                 # Extract SAML request data
-                set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
-                set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]] 1]
-                log local0. "DEBUG: SAMLdata: $SAMLdata"
+                samlRequest = [URI::query "?$payload_data" "SAMLRequest"]
+                #try this
+                SAMLdata = [b64decode $samlRequest]
+                if { $decodedSamlRequest contains "saml" } {
+                    # SAML Request was only b64 encoded - not deflated
+                    log local0. "DEBUG: decoded SAMLdata: $SAMLdata"
+                } else {
+                    set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
+                    set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]] 1]
+                    log local0. "DEBUG: decoded and inflated SAMLdata: $SAMLdata"
+                }
                 set SAML_Issuer_loc [string first "saml:issuer" [string tolower $SAMLdata]]
                 set SAML_Issuer_start [expr {[string first ">" $SAMLdata $SAML_Issuer_loc] + 1}]
                 set SAML_Issuer_end [expr {[string first "<" $SAMLdata $SAML_Issuer_start] - 1}]
@@ -40,9 +48,17 @@ when HTTP_REQUEST_DATA {
     log local0. "DEBUG: payload=$payload_data" 
     if { $payload_data contains "SAMLRequest" } {
         # Extract SAML request data
-        set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
-        set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]] 1]
-        log local0. "DEBUG: SAMLdata: $SAMLdata"
+        samlRequest = [URI::query "?$payload_data" "SAMLRequest"]
+        #try this
+        SAMLdata = [b64decode $samlRequest]
+        if { $decodedSamlRequest contains "saml" } {
+            # SAML Request was only b64 encoded - not deflated
+            log local0. "DEBUG: decoded SAMLdata: $SAMLdata"
+        } else {
+            set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
+            set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" [URI::query "?$payload_data" "SAMLRequest"]] 1]
+            log local0. "DEBUG: decoded and inflated SAMLdata: $SAMLdata"
+        }
         set SAML_Issuer_loc [string first "saml:issuer" [string tolower $SAMLdata]]
         set SAML_Issuer_start [expr {[string first ">" $SAMLdata $SAML_Issuer_loc] + 1}]
         set SAML_Issuer_end [expr {[string first "<" $SAMLdata $SAML_Issuer_start] - 1}]
