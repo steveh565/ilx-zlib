@@ -26,6 +26,7 @@ when HTTP_REQUEST {
                     # SAML Request was only b64 encoded - not deflated
                     log local0. "DEBUG: decoded SAMLdata: $SAMLdata"
                 } else {
+                    #b64decoded data is not ascii text - probably deflated
                     set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
                     set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" $samlRequest] 1]
                     log local0. "DEBUG: decoded and inflated SAMLdata: $SAMLdata"
@@ -55,6 +56,7 @@ when HTTP_REQUEST_DATA {
             # SAML Request was only b64 encoded - not deflated
             log local0. "DEBUG: decoded SAMLdata: $SAMLdata"
         } else {
+            #b64decoded data is not ascii text - probably deflated
             set handle [ILX::init "ilx-zlib_plugin" "ilx-zlib"]
             set SAMLdata [lindex [ILX::call $handle "b64decodeInflate" $samlRequest] 1]
             log local0. "DEBUG: decoded and inflated SAMLdata: $SAMLdata"
