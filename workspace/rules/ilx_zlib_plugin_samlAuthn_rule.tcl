@@ -19,9 +19,9 @@ when HTTP_REQUEST {
             log local0. "DEBUG: SAMLRequest Parameter: [URI::query "?$payload_data" "SAMLRequest"]"
             if { $payload_data contains "SAMLRequest" } {
                 # Extract SAML request data
-                samlRequest = [URI::query "?$payload_data" "SAMLRequest"]
+                set samlRequest [URI::query "?$payload_data" "SAMLRequest"]
                 #try this
-                SAMLdata = [b64decode $samlRequest]
+                set SAMLdata [b64decode $samlRequest]
                 if { $SAMLdata contains "saml" } {
                     # SAML Request was only b64 encoded - not deflated
                     log local0. "DEBUG: decoded SAMLdata: $SAMLdata"
@@ -49,9 +49,9 @@ when HTTP_REQUEST_DATA {
     log local0. "DEBUG: payload=$payload_data" 
     if { $payload_data contains "SAMLRequest" } {
         # Extract SAML request data
-        samlRequest = [URI::query "?$payload_data" "SAMLRequest"]
+        set samlRequest [URI::query "?$payload_data" "SAMLRequest"]
         #try this
-        SAMLdata = [b64decode $samlRequest]
+        set SAMLdata [b64decode $samlRequest]
         if { $SAMLdata contains "saml" } {
             # SAML Request was only b64 encoded - not deflated
             log local0. "DEBUG: decoded SAMLdata: $SAMLdata"
