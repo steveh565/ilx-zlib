@@ -13,6 +13,6 @@ From the BASH command line interface on the target BigIP:
 ```
 tmsh create ilx workspace ilx-zlib
 cd /var/ilx/workspaces/ilx-zlib
-tar -zxvf /var/tmp/ilz-zlib-0.3.tar.gz
+tar -zxvf /var/tmp/ilz-zlib-0.3b.tgz
 tmsh create ilx plugin ilx-zlib_plugin from-workspace ilx-zlib
 ```
